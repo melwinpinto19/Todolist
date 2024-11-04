@@ -1,7 +1,7 @@
 // store/todoSlice.js
 import { createSlice } from "@reduxjs/toolkit";
 import { loadTodos, saveTodos, clearTodos } from "../utils/localStorage";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 
 // Initialize state with data from localStorage
 const initialState = {
@@ -23,16 +23,16 @@ const todoSlice = createSlice({
       state.tasks.push(newTask);
       saveTodos(state.tasks);
 
-      toast.success("Task added successfully!", {
-        position: "bottom-right",
-        autoClose: 1000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      // toast.success("Task added successfully!", {
+      //   position: "bottom-right",
+      //   autoClose: 1000,
+      //   hideProgressBar: false,
+      //   closeOnClick: true,
+      //   pauseOnHover: true,
+      //   draggable: true,
+      //   progress: undefined,
+      //   theme: "light",
+      // });
     },
 
     // Delete a task
