@@ -17,7 +17,10 @@ const todoSlice = createSlice({
     addTask: (state, action) => {
       const newTask = {
         id: Date.now(),
-        text: action.payload,
+        todoType: action.payload.todoType,
+        message: action.payload.todoMessage,
+        priority: action.payload.priority,
+        dueDate: action.payload.dueDate,
         completed: false,
       };
       state.tasks.push(newTask);

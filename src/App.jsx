@@ -1,19 +1,16 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  addTask,
-  deleteTask,
-  clearAllTasks,
-  toggleTaskStatus,
-} from "./store/todoSlice";
+import { addTask, clearAllTasks } from "./store/todoSlice";
 import { ToastContainer } from "react-toastify";
-import { DarkModeToggler } from "./components/index";
+import { DarkModeToggler, EachTask } from "./components/index";
+import { TodoModal } from "./components/index";
 
 const TodoApp = () => {
   const [newTask, setNewTask] = useState("");
   const dispatch = useDispatch();
   const tasks = useSelector((state) => state.todos.tasks);
   const isDark = useSelector((state) => state.mode.isDark);
+  const [isModalOpen, setModalOpen] = useState(false);
 
   const handleAddTask = () => {
     if (newTask.trim()) {
@@ -29,6 +26,7 @@ const TodoApp = () => {
           isDark ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
         }`}
       >
+        <TodoModal isOpen={isModalOpen} onClose={() => setModalOpen(false)} />
         <div className="absolute top-4 right-4">
           <DarkModeToggler />
         </div>
@@ -56,6 +54,8 @@ const TodoApp = () => {
                   ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:ring-gray-500"
                   : "bg-white border border-gray-300 text-gray-900 focus:ring-blue-500"
               } transition ease-in-out duration-200`}
+              readOnly
+              onClick={() => setModalOpen(true)}
             />
             <button
               onClick={handleAddTask}
@@ -70,64 +70,9 @@ const TodoApp = () => {
           </div>
 
           {/* Task List */}
-          <ul className="space-y-4 max-h-96 overflow-y-auto">
+          <ul className="space-y-4 flex-wrap gap-2 overflow-y-auto max-[474px]:flex max-[474px]:justify-center items-start ">
             {tasks.map((task) => (
-              <li
-                key={task.id}
-                className={`flex items-center p-3 rounded-lg transition-all hover:bg-gray-100 ${
-                  isDark ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-50"
-                }`}
-              >
-                <button
-                  onClick={() => dispatch(toggleTaskStatus(task.id))}
-                  className={`mr-3 w-6 h-6 rounded-full border-2 ${
-                    task.completed
-                      ? "border-green-400 bg-green-400 text-white"
-                      : isDark
-                      ? "border-gray-500 bg-gray-800 hover:border-gray-400"
-                      : "border-gray-300 bg-white hover:border-blue-500"
-                  } flex items-center justify-center transition-all duration-200`}
-                >
-                  {task.completed && (
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M5 13l4 4L19 7"
-                      ></path>
-                    </svg>
-                  )}
-                </button>
-                <span
-                  onClick={() => dispatch(toggleTaskStatus(task.id))}
-                  className={`flex-grow cursor-pointer text-lg ${
-                    task.completed
-                      ? "line-through text-gray-400"
-                      : isDark
-                      ? "text-gray-300 hover:text-white"
-                      : "text-gray-700 hover:text-blue-600"
-                  } transition duration-200`}
-                >
-                  {task.text}
-                </span>
-                <button
-                  onClick={() => dispatch(deleteTask(task.id))}
-                  className={`ml-4 transition ease-in-out duration-200 ${
-                    isDark
-                      ? "text-red-400 hover:text-red-500"
-                      : "text-red-500 hover:text-red-600"
-                  }`}
-                >
-                  Delete
-                </button>
-              </li>
+              <EachTask task={task} key={task.id} />
             ))}
           </ul>
 
