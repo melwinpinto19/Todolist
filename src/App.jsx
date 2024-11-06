@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { addTask, clearAllTasks } from "./store/todoSlice";
 import { ToastContainer } from "react-toastify";
 import { DarkModeToggler, EachTask } from "./components/index";
-import { TodoModal } from "./components/index";
+import { TodoModal, TaskReminder } from "./components/index";
+import { FaFacebookMessenger } from "react-icons/fa";
 
 const TodoApp = () => {
   const [newTask, setNewTask] = useState("");
@@ -11,6 +12,7 @@ const TodoApp = () => {
   const tasks = useSelector((state) => state.todos.tasks);
   const isDark = useSelector((state) => state.mode.isDark);
   const [isModalOpen, setModalOpen] = useState(false);
+  const [isReminderModalOpen, setIsReminderModalOpen] = useState(false);
 
   const handleAddTask = () => {
     if (newTask.trim()) {
@@ -26,6 +28,28 @@ const TodoApp = () => {
           isDark ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
         }`}
       >
+        <div
+          className="fixed top-3 left-5 bg-yellow-500 p-2 rounded-full cursor-pointer"
+          onClick={() => setIsReminderModalOpen(true)}
+        >
+          {" "}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            width="24"
+            height="24"
+            fill="currentColor"
+          >
+            <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6V10c0-3.07-1.63-5.64-4.5-6.32V3a1.5 1.5 0 0 0-3 0v.68C7.63 4.36 6 6.92 6 10v6l-1.7 1.7c-.3.3-.3.77 0 1.06.3.3.77.3 1.06 0L6 17.4V18h12v-.6l1.64 1.64c.3.3.77.3 1.06 0 .3-.3.3-.77 0-1.06L18 16zM12 5c2.21 0 4 1.79 4 4v6H8v-6c0-2.21 1.79-4 4-4z" />
+          </svg>
+        </div>
+
+        <TaskReminder
+          isOpen={isReminderModalOpen}
+          onClose={() => {
+            setIsReminderModalOpen(false);
+          }}
+        />
         <TodoModal isOpen={isModalOpen} onClose={() => setModalOpen(false)} />
         <div className="absolute top-4 right-4">
           <DarkModeToggler />

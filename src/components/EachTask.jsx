@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteTask, toggleTaskStatus } from "../store/todoSlice";
 import { PriorityBadge } from "./index";
 import { EachTaskViewer } from "../components/index"; // Import the TaskModal component
+import { FaTrash } from "react-icons/fa";
 
 const EachTask = ({ task, index }) => {
   const isDark = useSelector((state) => state.mode.isDark);
@@ -21,11 +22,11 @@ const EachTask = ({ task, index }) => {
     <>
       <li
         key={task.id}
-        className={`flex  items-center p-3 rounded-lg transition-all ${
+        className={`flex max-[407px]:w-screen max-h-16 items-center p-3 rounded-lg transition-all ${
           isDark
             ? "bg-gray-700 hover:bg-gray-600"
             : "bg-gray-50 hover:bg-gray-100"
-        } flex-wrap `}
+        }  `}
       >
         {/* Task Status Button */}
         <button
@@ -59,14 +60,14 @@ const EachTask = ({ task, index }) => {
         {/* Task Message */}
         <span
           onClick={() => dispatch(toggleTaskStatus(task.id))}
-          className={`max-[536px]:w-28 block flex-grow max-[474px]:flex-grow-0 w-52 cursor-pointer text-ellipsis overflow-hidden text-lg max-[474px]:text-sm max-[474px]: ${
+          className={`max-[536px]:w-28 max-[407px]:w-20 block flex-grow max-[474px]:flex-grow-0 w-52 cursor-pointer text-ellipsis overflow-hidden text-lg max-[474px]:text-sm max-h-16  ${
             task.completed
               ? "line-through text-gray-400"
               : isDark
               ? "text-gray-300 hover:text-white"
               : "text-gray-700 hover:text-blue-600"
           } transition duration-200`}
-        //   style={window.innerWidth <= 474 ? { width: "100vw" } : null}
+          //   style={window.innerWidth <= 474 ? { width: "100vw" } : null}
         >
           {task.message}
         </span>
@@ -75,18 +76,6 @@ const EachTask = ({ task, index }) => {
         <div className="flex-shrink-0 mr-3">
           <PriorityBadge priority={task.priority} />
         </div>
-
-        {/* Delete Button */}
-        <button
-          onClick={() => dispatch(deleteTask(task.id))}
-          className={`ml-4 transition ease-in-out duration-200 ${
-            isDark
-              ? "text-red-400 hover:text-red-500"
-              : "text-red-500 hover:text-red-600"
-          }`}
-        >
-          Delete
-        </button>
 
         {/* View (Eye) Button */}
         <button
@@ -117,6 +106,14 @@ const EachTask = ({ task, index }) => {
               d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
             />
           </svg>
+        </button>
+
+        {/* Delete Button */}
+        <button
+          onClick={() => dispatch(deleteTask(task.id))}
+          className={`ml-4 transition ease-in-out duration-200 `}
+        >
+          <FaTrash />
         </button>
       </li>
 
