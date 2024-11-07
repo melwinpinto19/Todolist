@@ -12,8 +12,37 @@ const TodoModal = ({ isOpen, onClose }) => {
   const [todoMessage, setTodoMessage] = useState("");
   const isDarkMode = useSelector((state) => state.mode.isDark);
   const dispatch = useDispatch();
+  const [error, setError] = useState({
+    todoType: false,
+    dueDate: false,
+    priority: false,
+    todoMessage: false,
+  });
 
-  const handleNext = () => setStep((prevStep) => prevStep + 1);
+  const checkIfTheFieldsAreFilled = () => {
+    if (!todoType && step === 1) {
+      setError({ ...error, todoType: true });
+      return;
+    }
+    if (!dueDate && step === 2) {
+      setError({ ...error, dueDate: true });
+      return;
+    }
+    if (!priority && step === 3) {
+      setError({ ...error, priority: true });
+      return;
+    }
+    if (!todoMessage && step === 4) {
+      setError({ ...error, todoMessage: true });
+      return;
+    }
+
+    return 1;
+  };
+
+  const handleNext = () => {
+    if (checkIfTheFieldsAreFilled() === 1) setStep((prevStep) => prevStep + 1);
+  };
   const handleBack = () => setStep((prevStep) => prevStep - 1);
 
   const resetModalData = () => {
@@ -51,15 +80,21 @@ const TodoModal = ({ isOpen, onClose }) => {
           {step === 1 && (
             <>
               <h2 className="text-2xl font-semibold mb-4">Select Todo Type</h2>
+              {error.todoType && (
+                <p className="text-red-500 my-2">* todo type is required</p>
+              )}
               <select
                 value={todoType}
-                onChange={(e) => setTodoType(e.target.value)}
+                onChange={(e) => {
+                  setTodoType(e.target.value);
+                  if (e.target.value) setError({ ...error, todoType: false });
+                  else setError({ ...error, todoType: true });
+                }}
                 className={`w-full p-3 rounded-lg ${
                   isDarkMode
                     ? "bg-gray-700 text-white border-gray-600"
                     : "bg-gray-200 text-gray-800 border-gray-300"
                 }`}
-                
               >
                 <option value="" disabled>
                   Select Type
@@ -69,6 +104,7 @@ const TodoModal = ({ isOpen, onClose }) => {
                 <option value="work">Work</option>
                 <option value="exercise">Exercise</option>
               </select>
+
               <div className="mt-6 flex justify-end space-x-2">
                 <button
                   onClick={handleNext}
@@ -83,10 +119,18 @@ const TodoModal = ({ isOpen, onClose }) => {
           {/* Step 2: Select Due Date */}
           {step === 2 && (
             <>
-              <h2 className="text-2xl font-semibold mb-4">Select Due Date</h2>
+              <h2 className="text-2xl font-semibold mb-4">Select Due Date & Time</h2>
+              {error.dueDate && (
+                <p className="text-red-500 my-2">* due date & time is required</p>
+              )}
+              <div className='w-full flex justify-stretch'>
               <DatePicker
                 selected={dueDate}
-                onChange={(date) => setDueDate(date)}
+                onChange={(date) => {
+                  if (date) setError({ ...error, dueDate: false });
+                  else setError({ ...error, dueDate: true });
+                  setDueDate(date);
+                }}
                 className={`w-full p-3 rounded-lg ${
                   isDarkMode
                     ? "bg-gray-700 text-white border-gray-600"
@@ -94,7 +138,10 @@ const TodoModal = ({ isOpen, onClose }) => {
                 }`}
                 placeholderText="Select Date"
                 dateFormat="MMMM d, yyyy"
+                showTimeSelect
+                timeIntervals={30}
               />
+              </div>
               <div className="mt-6 flex justify-between">
                 <button
                   onClick={handleBack}
@@ -116,6 +163,9 @@ const TodoModal = ({ isOpen, onClose }) => {
           {step === 3 && (
             <>
               <h2 className="text-2xl font-semibold mb-4">Select Priority</h2>
+              {error.priority && (
+                <p className="text-red-500 my-2">* priority is required</p>
+              )}
               <div className="flex flex-col space-y-2">
                 <label className="flex items-center">
                   <input
@@ -174,9 +224,17 @@ const TodoModal = ({ isOpen, onClose }) => {
               <h2 className="text-2xl font-semibold mb-4">
                 Enter Todo Message
               </h2>
+              {error.todoMessage && (
+                <p className="text-red-500 my-2">* todo message is required</p>
+              )}
               <textarea
                 value={todoMessage}
-                onChange={(e) => setTodoMessage(e.target.value)}
+                onChange={(e) => {
+                  setTodoMessage(e.target.value);
+                  if (e.target.value)
+                    setError({ ...error, todoMessage: false });
+                  else setError({ ...error, todoMessage: true });
+                }}
                 placeholder="Type your todo here..."
                 className={`w-full p-3 h-24 rounded-lg resize-none ${
                   isDarkMode
@@ -194,7 +252,13 @@ const TodoModal = ({ isOpen, onClose }) => {
                 <button
                   onClick={() => {
                     // Save logic goes here
-                    dispatch(addTask({ todoType, dueDate, priority, todoMessage }));
+                    if (!todoMessage) {
+                      setError({ ...error, todoMessage: true });
+                      return;
+                    }
+                    dispatch(
+                      addTask({ todoType, dueDate, priority, todoMessage })
+                    );
                     resetModalData();
                     onClose();
                   }}

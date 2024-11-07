@@ -58,11 +58,24 @@ const todoSlice = createSlice({
         saveTodos(state.tasks);
       }
     },
+    setTodos: (state, payload) => {
+      console.log(payload.payload);
+      state.tasks = payload.payload;
+    },
+    resetTodoSort: (state) => {
+      state.tasks = loadTodos();
+    },
   },
 });
 
 // Export actions and reducer
-export const { addTask, deleteTask, clearAllTasks, toggleTaskStatus } =
-  todoSlice.actions;
+export const {
+  addTask,
+  deleteTask,
+  clearAllTasks,
+  toggleTaskStatus,
+  setTodos,
+  resetTodoSort,
+} = todoSlice.actions;
 
 export default todoSlice.reducer;

@@ -3,8 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addTask, clearAllTasks } from "./store/todoSlice";
 import { ToastContainer } from "react-toastify";
 import { DarkModeToggler, EachTask } from "./components/index";
-import { TodoModal, TaskReminder } from "./components/index";
-import { FaFacebookMessenger } from "react-icons/fa";
+import { TodoModal, TaskReminder, TodoListSorter } from "./components/index";
 
 const TodoApp = () => {
   const [newTask, setNewTask] = useState("");
@@ -57,14 +56,17 @@ const TodoApp = () => {
         <ToastContainer />
         <div
           className={`${
-            isDark ? "bg-gray-800" : "bg-white"
-          } rounded-3xl shadow-lg px-44 py-14 w-4/6 transition duration-200  max-[1229px]:px-5  max-[647px]:w-screen bg-transparent`}
+            isDark ? "bg-slate-800" : "bg-white"
+          } rounded-3xl shadow-lg px-44 py-14 w-4/6 transition duration-200  max-[1229px]:px-5  max-[647px]:w-screen bg-transparent max-[450px]:bg-transparent max-[373px]:px-2 max-[347px]:px-1  overflow-y-auto max-[450px]:h-auto`}
+          style={{height: "80vh" }}
         >
           {/* Dark Mode Toggle Button */}
 
           <h1 className="text-5xl font-bold mb-8 text-left max-[763px]:text-3xl">
             Daily To Do List
           </h1>
+
+          <TodoListSorter isDark={isDark} />
 
           {/* Input and Add Button */}
           <div className="flex items-center mb-8  w-full relative">
@@ -94,7 +96,7 @@ const TodoApp = () => {
           </div>
 
           {/* Task List */}
-          <ul className="space-y-4 flex-wrap gap-2 overflow-y-auto max-[474px]:flex max-[474px]:justify-center items-start ">
+          <ul className="space-y-4 flex-wrap gap-2 overflow-y-auto max-[474px]:flex max-[474px]:justify-center items-start max-h-96 overflow-auto">
             {tasks.map((task) => (
               <EachTask task={task} key={task.id} />
             ))}

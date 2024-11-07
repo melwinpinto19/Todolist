@@ -1,10 +1,23 @@
-import React from "react";
+import React, { useRef } from "react";
 import { FaTimes } from "react-icons/fa"; // Import a close icon for the button
 import { AiOutlineCalendar } from "react-icons/ai"; // Import a calendar icon for due date badge
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 
 const EachTaskViewer = ({ isOpen, onClose, task, index, isDark }) => {
   if (!isOpen) return null;
-
+  const dueDateData = {
+    years: new Date(task.dueDate).getFullYear(),
+    months: new Date(task.dueDate).getMonth(),
+    days: new Date(task.dueDate).getDate(),
+    hours: new Date(task.dueDate).getHours(),
+    minutes: new Date(task.dueDate).getMinutes(),
+    seconds: new Date(task.dueDate).getSeconds(),
+  };
+  const ref = useRef(null);
+  useGSAP(() => {
+    gsap.from(ref.current, { duration: 0.5, opacity: 0, scale: 0 });
+  });
   const compareDate = (dueDate) => {
     const today = new Date();
     dueDate = new Date(dueDate);
@@ -15,16 +28,16 @@ const EachTaskViewer = ({ isOpen, onClose, task, index, isDark }) => {
       today.getDate() === dueDate.getDate()
     ) {
       return {
-        text: "Today",
+        text: "Due Today",
         color: "bg-red-500",
       };
     } else if (
       today.getFullYear() === dueDate.getFullYear() &&
       today.getMonth() === dueDate.getMonth() &&
-      today.getDate() === dueDate.getDate() + 1
+      today.getDate() + 1 === dueDate.getDate()
     ) {
       return {
-        text: "Tomorrow",
+        text: "Due Tomorrow",
         color: "bg-yellow-500",
       };
     } else if (
@@ -56,22 +69,23 @@ const EachTaskViewer = ({ isOpen, onClose, task, index, isDark }) => {
       console.log(str);
 
       return {
-        text: `Date is ${str} away`,
-        color: "text-white",
+        text: `Due Date is ${str} away`,
+        color: "bg-" + `${isDark ? "black" : "black"}`,
       };
     }
   };
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-opacity ${
-        isDark ? "bg-gray-900 bg-opacity-80" : "bg-black bg-opacity-50"
+      className={`fixed max-[359px]:px-2 max-[347px]:pr-1 inset-0 w-screen h-screen  z-50 flex items-center justify-center p-4  ${
+        isDark ? "bg-gray-900 bg-opacity-80" : "bg-gray-50 bg-opacity-50"
       }`}
     >
       <div
-        className={`w-full max-w-lg p-6 rounded-2xl shadow-lg transform transition-all duration-300 ${
+        className={`w-full max-w-lg p-6 rounded-2xl shadow-lg  ${
           isDark ? "bg-gray-800 text-white" : "bg-white text-gray-900"
         }`}
+        ref={ref}
       >
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-semibold">Task Details</h2>
@@ -101,7 +115,14 @@ const EachTaskViewer = ({ isOpen, onClose, task, index, isDark }) => {
           <p className="flex items-center space-x-2">
             <strong className="text-gray-500 w-24 text-left">Due date</strong>
             <span>:</span>
-            <span>{new Date(task.dueDate).toDateString()}</span>
+            <span>
+              {new Date(task.dueDate).toLocaleDateString()}{" "}
+              {dueDateData.hours % 12}:
+              {dueDateData.minutes.toString().length === 1
+                ? new Date(task.dueDate).getMinutes() + "0"
+                : dueDateData.minutes}{" "}
+              {dueDateData.hours > 12 ? "PM" : "AM"}
+            </span>
           </p>
 
           <p className="flex items-center space-x-2">
@@ -137,7 +158,7 @@ const EachTaskViewer = ({ isOpen, onClose, task, index, isDark }) => {
             >
               <AiOutlineCalendar className="text-lg" />
               <span className="font-semibold">
-                Due {compareDate(task.dueDate).text}
+                {compareDate(task.dueDate).text}
               </span>
             </div>
           )}

@@ -24,7 +24,7 @@ const EachTask = ({ task, index }) => {
         key={task.id}
         className={`flex max-[407px]:w-screen max-h-16 items-center p-3 rounded-lg transition-all ${
           isDark
-            ? "bg-gray-700 hover:bg-gray-600"
+            ? ""
             : "bg-gray-50 hover:bg-gray-100"
         }  `}
       >

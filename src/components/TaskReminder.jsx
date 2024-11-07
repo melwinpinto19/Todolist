@@ -1,22 +1,29 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useSelector } from "react-redux";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 
 const ToDoListReminder = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
+  const ref = useRef(null);
+  useGSAP(() => {
+    gsap.from(ref.current, { x: -100, duration: 0.5,opacity: 0 });
+  });
+
   // Get tasks and dark mode status from Redux store
   const tasks = useSelector((state) =>
-    state.todos.tasks.filter(({ dueDate }) => {
+    state.todos.tasks.filter(({ dueDate,completed }) => {
       const today = new Date();
       dueDate = new Date(dueDate);
       return (
         today.getFullYear() === dueDate.getFullYear() &&
         today.getMonth() === dueDate.getMonth() &&
-        today.getDate() === dueDate.getDate()
+        today.getDate() === dueDate.getDate() && !completed
       );
     })
   );
-  const isDark = useSelector((state) => state.mode.isDark); 
+  const isDark = useSelector((state) => state.mode.isDark);
 
   // Styles for colors based on task urgency (e.g., Today, Tomorrow)
   const getColor = (dueDate) => {
@@ -29,7 +36,7 @@ const ToDoListReminder = ({ isOpen, onClose }) => {
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex items-start justify-end p-4 ${
+      className={`fixed inset-0 z-50 flex items-start justify-start p-4 ${
         isDark ? "bg-gray-900 bg-opacity-80" : "bg-black bg-opacity-50"
       }`}
     >
@@ -37,6 +44,7 @@ const ToDoListReminder = ({ isOpen, onClose }) => {
         className={`w-full max-w-md p-6 rounded-lg shadow-lg overflow-y-auto max-h-[80vh] ${
           isDark ? "bg-gray-800 " : "bg-white text-gray-900"
         }`}
+        ref={ref}
       >
         <h2 className="text-2xl font-bold mb-4">Today's Task Reminders</h2>
 
@@ -46,7 +54,9 @@ const ToDoListReminder = ({ isOpen, onClose }) => {
               key={index}
               className={`p-4 rounded-lg ${getColor(task.dueDate)}`}
             >
-              <h3 className="text-lg font-semibold mb-1 text-black">{task.message}</h3>
+              <h3 className="text-lg font-semibold mb-1 text-black">
+                {task.message}
+              </h3>
               <p className="text-sm mb-2 text-black">{task.todoType}</p>
               <div className="flex justify-between items-center text-sm">
                 <span className="font-medium text-gray-600">
