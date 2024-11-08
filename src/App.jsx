@@ -28,7 +28,11 @@ const TodoApp = () => {
           isDark ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
         }`}
       >
-        <div className="fixed top-3 left-24 bg-black p-2 rounded-full flex gap-2 justify-center items-center">
+        <div
+          className={`fixed top-3 left-24 ${
+            isDark ? "bg-white text-black" : "bg-black text-white"
+          } p-2 rounded-full flex gap-2 justify-center items-center`}
+        >
           <i className="fa-solid fa-award"></i>
 
           <span>{Object.values(rewards).reduce((a, b) => a + b, 0)}</span>

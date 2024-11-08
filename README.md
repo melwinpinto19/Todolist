@@ -1,7 +1,5 @@
-# Project Name
+# Daily To Do list
 
-Daily To Do list
----
 
 ## Features
 
