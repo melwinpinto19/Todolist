@@ -1,7 +1,6 @@
 # Project Name
 
-A brief description of your project. Highlight what it does and its main purpose.
-
+Daily To Do list
 ---
 
 ## Features
