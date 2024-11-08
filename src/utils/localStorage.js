@@ -10,3 +10,12 @@ export const saveTodos = (todos) => {
 export const clearTodos = () => {
   localStorage.removeItem("todos");
 };
+
+export const getRewards = () => {
+  const storedRewards = localStorage.getItem("rewards");
+  return storedRewards ? JSON.parse(storedRewards) : {};
+};
+
+export const setRewards = (rewards) => {
+  localStorage.setItem("rewards", JSON.stringify(rewards));
+};

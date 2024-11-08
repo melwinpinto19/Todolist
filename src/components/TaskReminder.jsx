@@ -55,9 +55,9 @@ const ToDoListReminder = ({ isOpen, onClose }) => {
               className={`p-4 rounded-lg ${getColor(task.dueDate)}`}
             >
               <h3 className="text-lg font-semibold mb-1 text-black">
-                {task.message}
+                {task.todoType}
               </h3>
-              <p className="text-sm mb-2 text-black">{task.todoType}</p>
+              <p className="text-sm mb-2 text-black">{task.message}</p>
               <div className="flex justify-between items-center text-sm">
                 <span className="font-medium text-gray-600">
                   {new Date(task.dueDate).toDateString()}

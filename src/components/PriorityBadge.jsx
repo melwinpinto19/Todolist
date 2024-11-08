@@ -10,6 +10,8 @@ const PriorityBadge = ({ priority }) => {
         return "bg-yellow-500 text-white";
       case "low":
         return "bg-green-500 text-white";
+      case "done":
+        return "bg-green-700 text-white";
       default:
         return "bg-gray-300 text-gray-700";
     }

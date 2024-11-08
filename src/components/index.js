@@ -5,6 +5,7 @@ import EachTask from "./EachTask";
 import EachTaskViewer from "./EachTaskViewer";
 import TaskReminder from "./TaskReminder";
 import TodoListSorter from "./TodoListSorter";
+import TodoFilter from "./TodoFilter";
 
 export {
   DarkModeToggler,
@@ -14,4 +15,5 @@ export {
   EachTaskViewer,
   TaskReminder,
   TodoListSorter,
+  TodoFilter,
 };

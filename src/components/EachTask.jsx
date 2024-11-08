@@ -4,6 +4,7 @@ import { deleteTask, toggleTaskStatus } from "../store/todoSlice";
 import { PriorityBadge } from "./index";
 import { EachTaskViewer } from "../components/index"; // Import the TaskModal component
 import { FaTrash } from "react-icons/fa";
+import { addReward,removeReward } from "../store/rewardSlice";
 
 const EachTask = ({ task, index }) => {
   const isDark = useSelector((state) => state.mode.isDark);
@@ -23,14 +24,24 @@ const EachTask = ({ task, index }) => {
       <li
         key={task.id}
         className={`flex max-[407px]:w-screen max-h-16 items-center p-3 rounded-lg transition-all ${
-          isDark
-            ? ""
-            : "bg-gray-50 hover:bg-gray-100"
+          isDark ? "" : "bg-gray-50 hover:bg-gray-100"
         }  `}
       >
         {/* Task Status Button */}
         <button
-          onClick={() => dispatch(toggleTaskStatus(task.id))}
+          onClick={() => {
+            dispatch(toggleTaskStatus(task.id));
+
+            if (
+              !task.completed &&
+              new Date().getTime() <= new Date(task.dueDate).getTime()
+            ) {
+              dispatch(addReward(task.id));
+            }
+            else{
+              dispatch(removeReward(task.id));
+            }
+          }}
           className={`mr-3 w-6 h-6 rounded-full border-2 ${
             task.completed
               ? "border-green-400 bg-green-400 text-white"
@@ -69,13 +80,19 @@ const EachTask = ({ task, index }) => {
           } transition duration-200`}
           //   style={window.innerWidth <= 474 ? { width: "100vw" } : null}
         >
-          {task.message}
+          {task.todoType}
         </span>
+        {!task.completed && (
+          <div className="flex-shrink-0 mr-3">
+            <PriorityBadge priority={task.priority} />
+          </div>
+        )}
 
-        {/* Priority Badge */}
-        <div className="flex-shrink-0 mr-3">
-          <PriorityBadge priority={task.priority} />
-        </div>
+        {task.completed && (
+          <div className="flex-shrink-0 mr-3">
+            <PriorityBadge priority="done" />
+          </div>
+        )}
 
         {/* View (Eye) Button */}
         <button

@@ -12,6 +12,7 @@ const TodoApp = () => {
   const isDark = useSelector((state) => state.mode.isDark);
   const [isModalOpen, setModalOpen] = useState(false);
   const [isReminderModalOpen, setIsReminderModalOpen] = useState(false);
+  const rewards = useSelector((state) => state.rewards.rewards);
 
   const handleAddTask = () => {
     if (newTask.trim()) {
@@ -27,6 +28,11 @@ const TodoApp = () => {
           isDark ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
         }`}
       >
+        <div className="fixed top-3 left-24 bg-black p-2 rounded-full flex gap-2 justify-center items-center">
+          <i className="fa-solid fa-award"></i>
+
+          <span>{Object.values(rewards).reduce((a, b) => a + b, 0)}</span>
+        </div>
         <div
           className="fixed top-3 left-5 bg-yellow-500 p-2 rounded-full cursor-pointer"
           onClick={() => setIsReminderModalOpen(true)}
@@ -57,8 +63,8 @@ const TodoApp = () => {
         <div
           className={`${
             isDark ? "bg-slate-800" : "bg-white"
-          } rounded-3xl shadow-lg px-44 py-14 w-4/6 transition duration-200  max-[1229px]:px-5  max-[647px]:w-screen bg-transparent max-[450px]:bg-transparent max-[373px]:px-2 max-[347px]:px-1  overflow-y-auto max-[450px]:h-auto`}
-          style={{height: "80vh" }}
+          } rounded-3xl shadow-lg px-44 py-14 w-4/6 transition duration-200  max-[1229px]:px-5  max-[647px]:w-screen bg-transparent max-[450px]:bg-transparent max-[373px]:px-2 max-[347px]:px-1  element max-[450px]:h-auto`}
+          style={{ height: "80vh" }}
         >
           {/* Dark Mode Toggle Button */}
 
@@ -74,7 +80,7 @@ const TodoApp = () => {
               type="text"
               value={newTask}
               onChange={(e) => setNewTask(e.target.value)}
-              placeholder="Add new list item"
+              placeholder="Add new todo..."
               className={`w-full p-3 rounded-lg shadow-sm focus:outline-none focus:ring-2 ${
                 isDark
                   ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:ring-gray-500"
@@ -96,7 +102,7 @@ const TodoApp = () => {
           </div>
 
           {/* Task List */}
-          <ul className="space-y-4 flex-wrap gap-2 overflow-y-auto max-[474px]:flex max-[474px]:justify-center items-start max-h-96 overflow-auto">
+          <ul className="space-y-4 flex-wrap gap-2  max-[474px]:flex max-[474px]:justify-center items-start  overflow-hidden">
             {tasks.map((task) => (
               <EachTask task={task} key={task.id} />
             ))}
